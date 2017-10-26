@@ -67,6 +67,21 @@ t_env	*init_env(char *s)
 	return (e);
 }
 
+int		key_hook(int keycode, t_env *e)
+{
+
+	if (keycode == ESC)
+		exit(0);
+	return (0);
+}
+
+int		close_prog(t_env *e)
+{
+	exit(0);
+	free(e);
+	return(0);
+}
+
 int main(int argc, char **argv)
 {
 	static double	pos[2] = {2.0,2.0};
@@ -156,6 +171,8 @@ int main(int argc, char **argv)
 		
 	}
 	mlx_put_image_to_window(e->mlx, e->win, e->f->img_ptr, 0, 0);
+	mlx_hook(e->win, 17, (1L << 17), close_prog, e);
+	mlx_hook(e->win, 2, (1L << 0), key_hook, e);
 	mlx_loop(e->mlx);
 	mlx_destroy_window(e->mlx, e->win);
 	return(0);

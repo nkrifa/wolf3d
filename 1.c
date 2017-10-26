@@ -18,7 +18,12 @@
 # define MARRON 0x663300;
 # define CYAN 0x00CCFF;
 
-
+typedef struct s_cam
+{
+    float xpos;
+    float ypos;
+    float wall_dist = tan
+}
 
 typedef struct  s_img
 {
@@ -45,9 +50,8 @@ void	draw_pixel(t_env *e, int x, int y, int color)
 		e->img->data[x + (y * WIN_W)] = color;
 }
 
-t_env	*init_env(char *s)
+t_env	*init_env(char *s, t_env *e)
 {
-	t_env	*e;
 
 	if (!(e = (t_env *)malloc(sizeof(t_env))))
 		return (NULL);
@@ -97,16 +101,17 @@ int		close_prog(t_mlx *mlx)
 
 int main (int ac, char **av)
 {
-    
+    t_env *e; 
+
     if (argc != 2 || !argv[1])
 	{
 		ft_putendl("Error");
 		return (0);
 	}
-	if ((e = init_env(argv[1])) != NULL)
+	if ((e = init_env(argv[1], e)) != NULL)
 	{
 		mlx_hook(e->win, 17, (1L << 17), close_prog, e);
-		mlx_hook(e->win, 2, (1L << 0), key_press, e);
+		mlx_hook(e->win, 2, (1L << 0), key_hook, e);
 		mlx_loop(e->mlx);
 		mlx_destroy_window(e->e, e->win);
 	}
