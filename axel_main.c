@@ -5,7 +5,7 @@
 # include <stdio.h>
 # define WIN_W 880
 # define WIN_H 880
-
+# define WIN_HH 2000
 # define UP 126
 # define DOWN 125
 # define LEFT 123
@@ -18,6 +18,34 @@
 # define CYAN 0x00CCFF
 
 
+typedef struct s_cam
+{
+	double 	rayposx;
+	double 	rayposy;
+	double 	raydirx;
+	double 	raydiry;
+	int		screen_index;
+	int		side;
+	double	sidedistx;
+	double	sidedisty;
+	double planex;
+	double planey;
+	double walldist;
+	int 	stepx;
+	int		stepy;
+	double	deltadistx;
+	double	deltadisty;
+}	t_cam;
+
+typedef struct s_player
+{
+	double dirx;
+	double diry;
+	double posx;
+	double posy;
+
+
+}			t_player;
 
 typedef struct  s_img
 {
@@ -30,13 +58,63 @@ typedef struct  s_img
 
 typedef struct	s_env
 {
+	t_cam		cam;
 	t_img		*f;
+	t_player    p;
 	void		*mlx;
-    void		*win;
-    int         color;
+	void		*win;
+	double		*pos;
+	int         color;
+	int			mapx;
+	int			mapy;
 }				t_env;
 
-char world[25] = "1111110001100011000111111";
+/*char world[10] =  "111111111\
+1000000001\
+1000100001\
+1000000001\
+1010000001\
+1010000001\
+1000000001\
+1000110001\
+1000000001\
+1111111111";*/
+
+int worldMap[24][24]=
+{
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1},
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+};
+
+/*1111111111
+  1000000001
+  1000000001
+  1000000001
+  1000000001
+  1000000001
+  1111111111";*/
 
 void	point_to_point_image(int x, int start, int end, int color, int *scene)
 {
@@ -52,10 +130,19 @@ t_env	*init_env(char *s)
 {
 	t_env	*e;
 
+
 	if (!(e = (t_env *)malloc(sizeof(t_env))))
 		return (NULL);
 	if (!(e->f = (t_img *)malloc(sizeof(t_img))))
 		return (NULL);
+	//if (!(e->p = (t_player)malloc(sizeof(t_player))))
+	//	return (NULL);
+	e->p.dirx = -1;
+	e->p.diry = 0;
+	e->p.posx = 12.0;
+	e->p.posy = 12.0;
+	e->cam.planex = 0.0;
+	e->cam.planey = 0.6;
 	e->mlx = mlx_init();
     e->f->img_ptr = mlx_new_image(e->mlx, WIN_W, WIN_H);
     e->f->data = (int *)mlx_get_data_addr(e->f->img_ptr, &e->f->bpp\
@@ -67,11 +154,156 @@ t_env	*init_env(char *s)
 	return (e);
 }
 
+
+void	ft_raycast(t_env *e)
+{
+	//static double	pos[2] = {2.0,2.0};
+	double			camX;
+	//static double	dir[2] = {0.15,-1.0};
+//	double			raydir[2];
+//	static double	plane[2] = {0.0,0.66};
+//	double			raypos[2];
+//	int				x;
+	t_cam		cam;
+//	int				map[2];
+//	int				step[2];
+	int				hit;
+	//int				side;
+	double			sidedist[2];
+//	double			deltadist[2];
+	double			perpwalldist;
+	int				lineheight;
+	
+	ft_bzero(e->f->data, 4 * WIN_H * WIN_W);
+	cam.screen_index = -1;
+	while(++cam.screen_index < WIN_W)
+	{
+		camX = (2 * cam.screen_index / (double)WIN_W) - 1;
+		cam.rayposx = e->p.posx;
+		cam.rayposy = e->p.posy;
+		cam.raydirx = e->p.dirx + e->cam.planex + camX;
+		cam.raydiry = e->p.diry + e->cam.planey + camX;
+		e->mapx = (int)cam.rayposx;
+		e->mapy = (int)cam.rayposy;
+		e->cam.deltadistx = sqrtf(1.0 + (cam.raydiry * cam.raydiry) / (cam.raydirx * cam.raydirx));
+		e->cam.deltadisty = sqrtf(1.0 + (cam.raydirx * cam.raydirx) / (cam.raydiry * cam.raydiry));
+		hit = 0;		
+		if (cam.raydirx < 0)
+		{
+			e->cam.stepx = -1;
+			cam.sidedistx = (cam.rayposx - (double)e->mapx) * e->cam.deltadistx;
+		}
+		else
+		{
+			e->cam.stepx = 1;
+			cam.sidedistx = ((double)e->mapx + 1.0 - cam.rayposx) * e->cam.deltadistx;
+		}
+		if (cam.raydiry < 0)
+		{
+			e->cam.stepy = -1;
+			cam.sidedisty = (cam.rayposy - (double)e->mapy) * e->cam.deltadisty;
+		}
+		else
+		{
+			e->cam.stepy = 1;
+			cam.sidedisty = ((double)e->mapy + 1.0 - cam.rayposy) * e->cam.deltadisty;
+		}
+		while (hit == 0) /*wall hit ? */
+		{
+			//printf("%d, %d\n",e->mapx,e->mapy);
+			if(cam.sidedistx < cam.sidedisty)
+			{
+				cam.sidedistx += e->cam.deltadistx;
+				e->mapx += e->cam.stepx;
+				cam.side = 0;
+			}
+			else
+			{
+				cam.sidedisty += e->cam.deltadisty;
+				e->mapy += e->cam.stepy;
+				cam.side = 1;
+			}
+			//printf("%c\n", world[e->mapx + (e->mapy * 5)]);
+			if (worldMap[e->mapx][e->mapy] > 0)//[e->mapx + (e->mapy * 10)] == '1')
+			{
+				hit = 1;
+			}
+		}
+		if (cam.side == 0)
+		{
+			perpwalldist = fabs(((double)e->mapx - cam.rayposx + (1 - e->cam.stepx) / 2) / cam.raydirx);
+		}
+		else
+		{
+			perpwalldist = fabs(((double)e->mapy - cam.rayposy + (1 - e->cam.stepy) / 2) / cam.raydiry);
+		}
+		lineheight = (int)((double)WIN_HH/perpwalldist);
+		
+		point_to_point_image(cam.screen_index, (int)(WIN_H/2 - lineheight/2) < 0 ? 0 : (int)(WIN_H/2 - lineheight/2), (int)(lineheight/2 + WIN_H/2) >= WIN_H ? WIN_H - 1 : (int)(lineheight/2 + WIN_H/2), cam.side ? BLEU : ROUGE, e->f->data);
+		
+	}
+	mlx_put_image_to_window(e->mlx, e->win, e->f->img_ptr, 0, 0);
+}
 int		key_hook(int keycode, t_env *e)
 {
+	double temp;
+	double tmp;
 
 	if (keycode == ESC)
 		exit(0);
+	if (keycode == RIGHT)
+	{
+		/*temp = e->p.dirx;
+		e->p.dirx = e->p.dirx * cos(-0.01*0.0174533) - e->p.diry + sin(-0.01*0.0174533);
+		e->p.diry = temp * sin(-0.01*0.0174533) + e->p.diry + cos(-0.01)*0.0174533;
+		temp = e->p.planex;
+		e->p.planex = e->p.planex * cos(-0.01*0.0174533) - e->p.planey + sin(-0.01*0.0174533);
+		e->p.planey = temp * sin(-0.01*0.0174533) + e->p.planey + cos(-0.01*0.0174533);
+		ft_raycast(e);
+		double oldDirX = e->p.dirx;
+		rot++;
+		e->p.dirx = cos(rot*0.0174533);// e->p.dirx * cos(-0.01) - e->p.diry * sin(-0.01);
+		e->p.diry = sin(rot*0.0174533);//oldDirX * sin(-0.01) + e->p.diry * cos(-0.01);
+		double oldPlaneX = e->p.planex;
+		e->p.planex = e->p.planex * cos(-0.01) - e->p.planey * sin(-0.01);
+		e->p.planey = oldPlaneX * sin(-0.01) + e->p.planey * cos(-0.01);*/
+		e->p.dirx= e->p.dirx * cos(-0.05) - e->p.diry * sin(0.05);
+		temp = e->p.dirx;
+		tmp = e->cam.planex;
+		e->p.diry= temp * sin(-0.05) + e->p.diry * cos(-0.05);
+		e->cam.planex = e->cam.planex * cos(-0.05) - e->cam.planey * sin(-0.05);
+		e->cam.planey = tmp * sin(-0.05) + e->cam.planey * cos(-0.05);
+	}
+	if (keycode == LEFT)
+	{	
+		temp = e->p.dirx;
+		tmp = e->cam.planex;
+		e->p.dirx = e->p.dirx * cos(0.05) - e->p.diry * sin(0.05);
+		e->p.diry = temp * sin(0.05) + e->p.diry * cos(0.05);
+		e->cam.planex = e->cam.planex * cos(0.05) - e->cam.planey * sin(0.05);
+		e->cam.planey = tmp * sin(0.05) + e->cam.planey * cos(0.05);
+	}
+	if (keycode == UP)
+	{	
+		if(worldMap[(int)(e->p.posx + e->p.dirx * 1)][(int)(e->p.posy)] == 0)
+			e->p.posx += e->p.dirx * 1;
+		if(worldMap[(int)(e->p.posx)][(int)(e->p.posy + e->p.dirx * 1)] == 0)
+			e->p.posy += e->p.diry * 1;
+		//ft_raycast(e);
+	
+	}
+	if (keycode == DOWN)
+	{	
+		if(worldMap[(int)(e->p.posx - e->p.dirx * 1)][(int)(e->p.posy)] == 0)
+			e->p.posx -= e->p.dirx * 1;
+		if(worldMap[(int)(e->p.posx)][(int)(e->p.posy - e->p.dirx * 1)] == 0)
+			e->p.posy -= e->p.diry * 1;
+
+		//e->p.posx -= (e->p.dirx * 0.01);
+		//ft_raycast(e);
+	
+	}
+	ft_raycast(e);
 	return (0);
 }
 
@@ -82,95 +314,17 @@ int		close_prog(t_env *e)
 	return(0);
 }
 
+
 int main(int argc, char **argv)
 {
-	static double	pos[2] = {2.0,2.0};
-	double			camX;
-	static double	dir[2] = {0.0,-1.0};
-	double			raydir[2];
-	static double	plane[2] = {0.0,0.66};
-	double			raypos[2];
-	int				x;
-	int				map[2];
-	int				step[2];
-	int				hit;
-	int				side;
-	double			sidedist[2];
-	double			deltadist[2];
-	double			perpwalldist;
-	int				lineheight;
 	t_env			*e;
-
+	
 	if ((e = init_env(argv[1])) != NULL)
 	{
 		//mlx_hook(e->win, 17, (1L << 17), close_prog, e);
 		//mlx_hook(e->win, 2, (1L << 0), key_press, e);
 	}
-	x = -1;
-	while(++x < WIN_W)
-	{
-		camX = (2 * x / (double)WIN_W) - 1;
-		raypos[0] = pos[0];
-		raypos[1] = pos[1];
-		raydir[0] = dir[0] + plane[0] + camX;
-		raydir[1] = dir[1] + plane[1] + camX;
-		map[0] = (int)raypos[0];
-		map[1] = (int)raypos[1];
-		deltadist[0] = sqrtf(1.0 + (raydir[1] * raydir[1]) / (raydir[0] * raydir[0]));
-		deltadist[1] = sqrtf(1.0 + (raydir[0] * raydir[0]) / (raydir[1] * raydir[1]));
-		hit = 0;		
-		if (raydir[0] < 0)
-		{
-			step[0] = -1;
-			sidedist[0] = (raypos[0] - map[0]) * deltadist[0];
-		}
-		else
-		{
-			step[0] = 1;
-			sidedist[0] = (map[0] + 1.0 - raypos[0]) * deltadist[0];
-		}
-		if (raydir[1] < 0)
-		{
-			step[1] = -1;
-			sidedist[1] = (raypos[1] - map[1]) * deltadist[1];
-		}
-		else
-		{
-			step[1] = -1;
-			sidedist[1] = (map[1] + 1.0 - raypos[1]) * deltadist[1];
-		}
-		while (hit == 0) /*wall hit ? */
-		{
-			if(sidedist[0] < sidedist[1])
-			{
-				sidedist[0] += deltadist[0];
-				map[0] += step[0];
-				side = 0;
-			}
-			else
-			{
-				sidedist[1] += deltadist[1];
-				map[1] += step[1];
-				side = 1;
-			}
-			printf("%c\n", world[map[0] + (map[1] * 5)]);
-			if (world[map[0] + (map[1] * 5)] != '0')
-				hit = 1;
-		}
-		if (side)
-		{
-			perpwalldist = ((double)map[1] - raypos[1] + (1 - (double)step[1]) / 2) / raydir[1];
-		}
-		else
-		{
-			perpwalldist = ((double)map[0] - raypos[0] + (1 - (double)step[0]) / 2) / raydir[0];
-		}
-		lineheight = (int)((double)WIN_H/perpwalldist);
-		
-		point_to_point_image(x, (int)(WIN_H/2 - lineheight/2) < 0 ? 0 : (int)(WIN_H/2 - lineheight/2), (int)(lineheight/2 + WIN_H/2), ROUGE, e->f->data);
-		
-	}
-	mlx_put_image_to_window(e->mlx, e->win, e->f->img_ptr, 0, 0);
+	ft_raycast(e);
 	mlx_hook(e->win, 17, (1L << 17), close_prog, e);
 	mlx_hook(e->win, 2, (1L << 0), key_hook, e);
 	mlx_loop(e->mlx);
