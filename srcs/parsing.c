@@ -6,7 +6,7 @@
 /*   By: oukrifa <oukrifa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/23 23:32:31 by oukrifa           #+#    #+#             */
-/*   Updated: 2017/10/29 05:14:54 by oukrifa          ###   ########.fr       */
+/*   Updated: 2017/10/29 17:30:20 by oukrifa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,31 +37,6 @@ int                 ft_open(const char *file_name)
 }
 
 /*
-**      COUNT THE NB OF COL OF THE FILE
-*/
-
-unsigned int        ft_count_words_sep(char *s, int c)
-{
-    unsigned int    i;
-    unsigned int    j;
-
-    i = 0;
-    j = 0;
-    while (s[i])
-    {
-        if (s[i] != ' ' && s[i] != ',' && !ft_isdigit(s[i]) && s[i] != '-')
-            exit(ft_puterror(CHAR_ERROR));
-        while (s[i] && s[i] == c)
-            i++;
-        if (s[i])
-            j++;
-        while (s[i] && s[i] != c)
-            i++;
-    }
-    return (j);
-}
-
-/*
 **      GET THE NB OF COL AND LINES OF THE FILE AND CHECK INPUTS ERRORS TOO
 */
 
@@ -75,13 +50,13 @@ void                get_and_check(int fd, t_map *map)
     line = NULL;
     if ((ret = get_next_line(fd, &line)) <= 0)
         exit(ft_puterror(READ_ERROR));
-    map->col = ft_count_words_sep(line, ' ');
+    map->col = ft_strlen(line);
     free(line);
     while ((ret = get_next_line(fd, &line)) >= 0 && count++ > 0)
     {
         if (!ret)
             break;
-        if (file->col != ft_count_words_sep(line, ' '))
+        if (map->col != ft_strlen(line))
             exit(ft_puterror(LINE_ERROR));
         free(line);
     }
@@ -103,18 +78,21 @@ int             **get_points(int fd, t_map *map)
 
     count = 0;
     line = NULL;
-    if (!(point = (int **)ft_memalloc(sizeof(int *) * map->line * map->col))))
+    if (!(tab = (int **)ft_memalloc(sizeof(int *) * map->line))))
         exit(ft_puterror(MALLOC_ERROR));
-    while ((ret = get_next_line((const int)fd, &line)) >= 0)
-    {
-        while (*line)
+        while ((ret = get_next_line((const int)fd, &line)) >= 0)
         {
-            point[count].x = count % file.col;
-            point[count].y = count / file.col;
-            point[count].color = 0;
-            point[count++].z = ft_atoi(line);
-            while (*line && *line != ' ')
-                line++;
+            while (*line)
+            {
+            if (!(tab[count / map->col] = (int *)ft_memalloc(sizeof(int ) * map->col))))
+                exit(ft_puterror(MALLOC_ERROR));
+            tab[count / map->col][count % map->line] = (int)(*line - '0');
+            //tab[count].y = count / map.col;
+            //tab[count].color = 0;
+            //tab[count++] = ft_atoi(line);
+            //while (*line && *line != ' ')
+            //    line++;
+            count++;
             line = *line ? line + 1 : line;
         }
         if (!ret)
@@ -122,13 +100,16 @@ int             **get_points(int fd, t_map *map)
     }
     {
         int i = 0; //
-        while (i < count)
+        int j = 0; //
+        while (i < map->line)
         {
-            printf("%d/ x : %d, y = %d, z = %d\n", i, point[i].x, point[i].y, point[i].z);
+            j = 0;
+            while(j < map->col)
+                printf("%d ", , tab[i][j]);
             i++;
         }
     }
-    return (point);
+    return (tab);
 }
 
 /*
@@ -138,7 +119,7 @@ int             **get_points(int fd, t_map *map)
 t_point             *ft_parsing(char *av, t_file *file)
 {
     int             fd;
-    t_point         *point;
+    t_map         *map;
 
     fd = ft_open(av);
     get_and_check(fd, file);

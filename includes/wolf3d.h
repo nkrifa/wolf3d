@@ -6,7 +6,7 @@
 /*   By: oukrifa <oukrifa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/29 01:05:27 by nkrifa            #+#    #+#             */
-/*   Updated: 2017/10/29 05:12:32 by oukrifa          ###   ########.fr       */
+/*   Updated: 2017/10/29 17:09:02 by oukrifa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ typedef struct	s_env
 typedef	struct	s_map
 {
 	unsigned int	col;
-	unsigned int	lin;
+	unsigned int	line;
 	int				**tab;
 }				t_map;
 
