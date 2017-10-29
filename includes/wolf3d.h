@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wolf3d.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkrifa <nkrifa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: oukrifa <oukrifa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/29 01:05:27 by nkrifa            #+#    #+#             */
-/*   Updated: 2017/10/29 02:51:29 by nkrifa           ###   ########.fr       */
+/*   Updated: 2017/10/29 05:12:32 by oukrifa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,13 @@ typedef struct	s_env
 	int			mapx;
 	int			mapy;
 }				t_env;
+
+typedef	struct	s_map
+{
+	unsigned int	col;
+	unsigned int	lin;
+	int				**tab;
+}				t_map;
 
 void			ft_bg_set(int *s, int c, size_t n);
 void			draw(int x, int start, int end, t_env *e);

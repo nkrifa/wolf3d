@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nkrifa <nkrifa@student.42.fr>              +#+  +:+       +#+         #
+#    By: oukrifa <oukrifa@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/02/09 13:47:47 by nkrifa            #+#    #+#              #
-#    Updated: 2017/10/29 02:33:25 by nkrifa           ###   ########.fr        #
+#    Updated: 2017/10/29 04:44:50 by oukrifa          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,8 @@ SOURCES = srcs/main.c \
 OBJECTS = $(SOURCES:.c=.o)
 
 $(NAME): $(LIBDIR)/lib$(LIB_NAME).a $(OBJECTS)
-	@$(CC) $(FLAGS) -L $(LIBDIR) -l $(LIB_NAME) -o $@ $^ -lmlx -framework OpenGL -framework AppKit
-	@echo "./$(NAME) is ready."
+	@$(CC) $(FLAGS) -L$(LIBDIR) -l$(LIB_NAME) -L./ -lmlx -o $@ $^ -lmlx -framework OpenGL -framework AppKit
+	@echo "./$(NAME) is ready. now make the parsing"
 
 $(LIBDIR)/lib$(LIB_NAME).a : 
 	@$(MAKE) -C $(LIBDIR)
