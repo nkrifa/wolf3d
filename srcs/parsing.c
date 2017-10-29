@@ -6,11 +6,18 @@
 /*   By: oukrifa <oukrifa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/23 23:32:31 by oukrifa           #+#    #+#             */
-/*   Updated: 2017/10/29 17:30:20 by oukrifa          ###   ########.fr       */
+/*   Updated: 2017/10/29 18:17:14 by oukrifa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "wolf3d.h"
+#include "../includes/wolf3d.h"
+#include <fcntl.h>
+
+#define READ_ERROR "error"
+#define MALLOC_ERROR "error"
+#define LINE_ERROR "error"
+#define OPEN_ERROR "error"
+#define FAILURE -1
 
 /*
 **      PRINT ERRNO 
@@ -78,34 +85,42 @@ int             **get_points(int fd, t_map *map)
 
     count = 0;
     line = NULL;
-    if (!(tab = (int **)ft_memalloc(sizeof(int *) * map->line))))
-        exit(ft_puterror(MALLOC_ERROR));
-        while ((ret = get_next_line((const int)fd, &line)) >= 0)
+    if (!(tab = (int **)ft_memalloc(sizeof(int *) * map->line)))
+    exit(ft_puterror(MALLOC_ERROR));
+    while ((ret = get_next_line((const int)fd, &line)) >= 0)
+    {
+        while (*line)
         {
-            while (*line)
-            {
-            if (!(tab[count / map->col] = (int *)ft_memalloc(sizeof(int ) * map->col))))
-                exit(ft_puterror(MALLOC_ERROR));
-            tab[count / map->col][count % map->line] = (int)(*line - '0');
+            if (!(tab[count / map->col] = (int *)ft_memalloc(sizeof(int ) * map->col)))
+            exit(ft_puterror(MALLOC_ERROR));
+            tab[count / map->col][count % map->col] = *line - '0';
+            //printf("i = %d et j = %d et val = %d.\n", count / map->col, count % map->col, *line - '0');
             //tab[count].y = count / map.col;
             //tab[count].color = 0;
             //tab[count++] = ft_atoi(line);
             //while (*line && *line != ' ')
             //    line++;
+            //printf("%d", tab[count / map->col][count % map->col]);
+            printf("i = %d et j = %d\n", count / map->col, count % map->col);
             count++;
-            line = *line ? line + 1 : line;
+            line++;
+            //line = *line ? line + 1 : line;
+        
         }
+        printf("\n");
         if (!ret)
             break;
     }
     {
         int i = 0; //
         int j = 0; //
+        printf("line = %d et col = %d\n", map->line, map->col);
         while (i < map->line)
         {
             j = 0;
             while(j < map->col)
-                printf("%d ", , tab[i][j]);
+                printf("%d", tab[i][j++]);
+            printf("\n");
             i++;
         }
     }
@@ -116,26 +131,24 @@ int             **get_points(int fd, t_map *map)
 **      MANAGE THE CHECK/PARSE PART
 */
 
-t_point             *ft_parsing(char *av, t_file *file)
+t_map             ft_parsing(char *av, int fd)
 {
-    int             fd;
-    t_map         *map;
+    t_map           map;
 
     fd = ft_open(av);
-    get_and_check(fd, file);
+    get_and_check(fd, &map);
     close(fd);
     fd = ft_open(av);
-    point = get_points(fd, *file);
+    map.tab = get_points(fd, &map);
     close(fd);
-    return (point);
+    return (map);
 }
-/*
+
 int main(int ac, char **av)
-{
-    t_file file;
+{    int fd;
+    
     if (ac == 2)
     {
-        ft_parsing(av[1], &file);
+        ft_parsing(av[1], fd);
     }
 }
-*/
