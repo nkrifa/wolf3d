@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oukrifa <oukrifa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nkrifa <nkrifa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/29 01:49:21 by nkrifa            #+#    #+#             */
-/*   Updated: 2017/10/29 04:46:14 by oukrifa          ###   ########.fr       */
+/*   Updated: 2017/10/29 20:14:11 by nkrifa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_env	*init_env(char *s)
 		exit(0);
 	e->p.dirx = -1;
 	e->p.diry = 0;
-	e->p.posx = 5.0;
+	e->p.posx = 2.0;
 	e->p.posy = 2.0;
 	e->cam.hit = 0;
 	e->cam.screen_index = -1;

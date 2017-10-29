@@ -1,22 +1,35 @@
-void	ft_encoder(t_env *meta, int xx, int yy, char *tab)
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   yolo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nkrifa <nkrifa@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/10/29 19:17:35 by nkrifa            #+#    #+#             */
+/*   Updated: 2017/10/29 20:12:50 by nkrifa           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/wolf3d.h"
+
+void	ft_encoder(t_env *e, int xx, int yy, char *tab)
 {
-	double	y;
-	double	x;
+	int	y;
+	int	x;
 
 	y = -1;
-	tab = ft_strsplit(meta->line, ' ');
-	if (!(meta->map.tab = (t_data**)malloc(sizeof(t_data)
+	if (!(e->map.tab = (int**)malloc(sizeof(int*)
 		* (yy + 1))))
 		exit(0);
 	while (++y < yy && (x = -1))
 	{
-		if (!(meta->map.tab[(int)y] = (t_data*)malloc(sizeof(t_data)
+		if (!(e->map.tab[(int)y] = (int*)malloc(sizeof(int)
 			* xx + 1)))
 			exit(0);
 		while (++x < xx)
-			meta->map.tab[y][x] = (double)ft_atoi(tab[((int)y * xx + (int)x)]);
+			e->map.tab[y][x] = tab[((int)y * xx + (int)x)] - 48;
 	}
-	free(tab);
+	//free(tab);
 }
 
 char	*ft_strjoin1(char **s1, char *s2)
@@ -34,7 +47,7 @@ char	*ft_strjoin1(char **s1, char *s2)
 			return (NULL);
 		ft_strcpy(dest, *s1);
 		ft_strcpy(&dest[ss1], s2);
-		ft_strcpy(&dest[ss1 + ss2], " ");
+		//ft_strcpy(&dest[ss1 + ss2], " ");
 		free(*s1);
 		free(s2);
 		return (dest);
@@ -42,12 +55,11 @@ char	*ft_strjoin1(char **s1, char *s2)
 	return (NULL);
 }
 
-void	ft_partcing(t_env *e, int fd)
+void	ft_parcing(t_env *e, int fd)
 {
 	char	*line;
-	char	**tab;
+	char	*tab;
 	char *laligne;
-	int		temp;
 	int		i;
 	int x;
 	int y;
@@ -56,20 +68,18 @@ void	ft_partcing(t_env *e, int fd)
 	i = 0;
 	laligne = ft_strnew(1);
 	line = NULL;
-	while (get_next_line(fd, &line) && !(temp = 0))
+	while (get_next_line(fd, &line))
 	{
+		tab = line;
 		laligne = ft_strjoin1(&laligne, line);
 		if (++y <= 1)
 		{
-			tab = ft_strsplit(line, ' ');
 			x = 0;
-			while (*tab++ != '\0')
-				x++;
+			while (tab[x] != '\0')
+			x++;
 		}
 	}
 	while (laligne[i++] != '\0')
-		if (laligne[i] != laligne[i + 1])
-			laligne[i] == ' ' ? temp++ : 0;
-	temp != (y * x) ? exit(write(1, NORME, 30))
-	: ft_encoder(e, x, y, laligne);
+		;
+	i - 1 != (y * x) ? exit(write(1,"yolo", 4)) : ft_encoder(e, x, y, laligne);
 }

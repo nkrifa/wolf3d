@@ -6,13 +6,13 @@
 /*   By: nkrifa <nkrifa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/29 01:45:48 by nkrifa            #+#    #+#             */
-/*   Updated: 2017/10/29 02:48:12 by nkrifa           ###   ########.fr       */
+/*   Updated: 2017/10/29 19:42:51 by nkrifa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/wolf3d.h"
 
-int		wm[24][24] = \
+/*int		wm[24][24] = \
 {\
 {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},\
 {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},\
@@ -38,7 +38,7 @@ int		wm[24][24] = \
 {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},\
 {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},\
 {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}\
-};
+};*/
 
 void	ft_raycast2(t_env *e)
 {
@@ -56,7 +56,7 @@ void	ft_raycast2(t_env *e)
 			e->mapy += e->cam.stepy;
 			e->cam.side = 1;
 		}
-		if (wm[e->mapx][e->mapy] != 0)
+		if (e->map.tab[e->mapx][e->mapy] != 0)
 			e->cam.hit = 1;
 	}
 	if (e->cam.side == 0)
@@ -72,16 +72,16 @@ int		key_hook2(int keycode, t_env *e, double tmp, double temp)
 {
 	if (keycode == UP)
 	{
-		if (wm[(int)(e->p.posx + e->p.dirx * 0.51)][(int)(e->p.posy)] == 0)
+		if (e->map.tab[(int)(e->p.posx + e->p.dirx * 0.51)][(int)(e->p.posy)] == 0)
 			e->p.posx += e->p.dirx * 0.5;
-		if (wm[(int)(e->p.posx)][(int)(e->p.posy + e->p.diry * 0.51)] == 0)
+		if (e->map.tab[(int)(e->p.posx)][(int)(e->p.posy + e->p.diry * 0.51)] == 0)
 			e->p.posy += e->p.diry * 0.5;
 	}
 	if (keycode == DOWN)
 	{
-		if (wm[(int)(e->p.posx - e->p.dirx * 0.5)][(int)(e->p.posy)] == 0)
+		if (e->map.tab[(int)(e->p.posx - e->p.dirx * 0.5)][(int)(e->p.posy)] == 0)
 			e->p.posx -= e->p.dirx * 0.5;
-		if (wm[(int)(e->p.posx)][(int)(e->p.posy - e->p.diry * 0.5)] == 0)
+		if (e->map.tab[(int)(e->p.posx)][(int)(e->p.posy - e->p.diry * 0.5)] == 0)
 			e->p.posy -= e->p.diry * 0.5;
 	}
 	if (keycode == LEFT)
@@ -120,6 +120,7 @@ int		main(int argc, char **argv)
 	t_env			*e;
 
 	e = init_env(argv[1]);
+	ft_parcing(e, open(argv[1], O_RDONLY));
 	ft_raycast(e);
 	mlx_hook(e->win, 17, (1L << 17), close_prog, e);
 	mlx_hook(e->win, 2, (1L << 0), key_hook, e);

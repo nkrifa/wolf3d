@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: oukrifa <oukrifa@student.42.fr>            +#+  +:+       +#+         #
+#    By: nkrifa <nkrifa@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/02/09 13:47:47 by nkrifa            #+#    #+#              #
-#    Updated: 2017/10/29 04:44:50 by oukrifa          ###   ########.fr        #
+#    Updated: 2017/10/29 19:38:06 by nkrifa           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ HEADERS = includes/wolf3d.h
 
 SOURCES = srcs/main.c \
 		  srcs/raycast.c \
-		  srcs/tools.c
+		  srcs/tools.c\
+		  srcs/yolo.c
 		 
 
 OBJECTS = $(SOURCES:.c=.o)

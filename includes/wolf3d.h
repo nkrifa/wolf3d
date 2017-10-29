@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wolf3d.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oukrifa <oukrifa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nkrifa <nkrifa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/29 01:05:27 by nkrifa            #+#    #+#             */
-/*   Updated: 2017/10/29 17:09:02 by oukrifa          ###   ########.fr       */
+/*   Updated: 2017/10/29 19:42:01 by nkrifa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <math.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <fcntl.h>
 # define WIN_W 880
 # define WIN_H 880
 # define WIN_HH 2000
@@ -74,8 +75,16 @@ typedef struct	s_img
 	int			endian;
 }				t_img;
 
+typedef	struct	s_map
+{
+	unsigned int	col;
+	unsigned int	line;
+	int				**tab;
+}				t_map;
+
 typedef struct	s_env
 {
+	t_map		map;
 	t_cam		cam;
 	t_img		*f;
 	t_player	p;
@@ -87,12 +96,6 @@ typedef struct	s_env
 	int			mapy;
 }				t_env;
 
-typedef	struct	s_map
-{
-	unsigned int	col;
-	unsigned int	line;
-	int				**tab;
-}				t_map;
 
 void			ft_bg_set(int *s, int c, size_t n);
 void			draw(int x, int start, int end, t_env *e);
@@ -106,5 +109,6 @@ void			ft_bg_set(int *s, int c, size_t n);
 int				key_hook2(int keycode, t_env *e, double tmp, double temp);
 int				key_hook(int keycode, t_env *e);
 int				close_prog(t_env *e);
+void			ft_parcing(t_env *e, int fd);
 
 #endif
