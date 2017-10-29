@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   yolo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkrifa <nkrifa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: afiodier <afiodier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/29 19:17:35 by nkrifa            #+#    #+#             */
-/*   Updated: 2017/10/29 20:12:50 by nkrifa           ###   ########.fr       */
+/*   Updated: 2017/10/29 23:01:23 by afiodier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	ft_encoder(t_env *e, int xx, int yy, char *tab)
 {
-	int	y;
-	int	x;
+	int		y;
+	int		x;
 
 	y = -1;
 	if (!(e->map.tab = (int**)malloc(sizeof(int*)
@@ -29,7 +29,7 @@ void	ft_encoder(t_env *e, int xx, int yy, char *tab)
 		while (++x < xx)
 			e->map.tab[y][x] = tab[((int)y * xx + (int)x)] - 48;
 	}
-	//free(tab);
+	free(tab);
 }
 
 char	*ft_strjoin1(char **s1, char *s2)
@@ -47,7 +47,6 @@ char	*ft_strjoin1(char **s1, char *s2)
 			return (NULL);
 		ft_strcpy(dest, *s1);
 		ft_strcpy(&dest[ss1], s2);
-		//ft_strcpy(&dest[ss1 + ss2], " ");
 		free(*s1);
 		free(s2);
 		return (dest);
@@ -58,28 +57,24 @@ char	*ft_strjoin1(char **s1, char *s2)
 void	ft_parcing(t_env *e, int fd)
 {
 	char	*line;
-	char	*tab;
-	char *laligne;
+	//char	*tab;
+	char	*laligne;
 	int		i;
-	int x;
-	int y;
+	int		x;
+	int		y;
 
 	y = 0;
-	i = 0;
+	x = 0;
 	laligne = ft_strnew(1);
 	line = NULL;
-	while (get_next_line(fd, &line))
+	while (get_next_line(fd, &line) && !(i = 0))
 	{
-		tab = line;
 		laligne = ft_strjoin1(&laligne, line);
 		if (++y <= 1)
-		{
-			x = 0;
-			while (tab[x] != '\0')
-			x++;
-		}
+			while (line[x] != '\0')
+				x++;
 	}
 	while (laligne[i++] != '\0')
 		;
-	i - 1 != (y * x) ? exit(write(1,"yolo", 4)) : ft_encoder(e, x, y, laligne);
+	i - 1 != (y * x) ? exit(write(1, "yolo", 4)) : ft_encoder(e, x, y, laligne);
 }
