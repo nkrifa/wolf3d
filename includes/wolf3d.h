@@ -6,7 +6,7 @@
 /*   By: nkrifa <nkrifa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/29 01:05:27 by nkrifa            #+#    #+#             */
-/*   Updated: 2017/10/29 19:42:01 by nkrifa           ###   ########.fr       */
+/*   Updated: 2017/10/30 02:33:35 by nkrifa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <fcntl.h>
+
 # define WIN_W 880
 # define WIN_H 880
 # define WIN_HH 2000
@@ -33,6 +34,12 @@
 # define MARRON 0x663300
 # define CYAN 0x00CCFF
 # define VERT 0x00FF00
+
+# define CAMX e->cam.planex
+# define CAMY e->cam.planey
+# define POSX e->p.posx
+# define POSY e->p.posy
+# define TAB e->map.tab
 
 typedef struct	s_cam
 {
@@ -95,7 +102,6 @@ typedef struct	s_env
 	int			mapx;
 	int			mapy;
 }				t_env;
-
 
 void			ft_bg_set(int *s, int c, size_t n);
 void			draw(int x, int start, int end, t_env *e);

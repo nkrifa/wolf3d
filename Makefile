@@ -6,7 +6,7 @@
 #    By: nkrifa <nkrifa@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/02/09 13:47:47 by nkrifa            #+#    #+#              #
-#    Updated: 2017/10/29 19:38:06 by nkrifa           ###   ########.fr        #
+#    Updated: 2017/10/30 00:19:12 by nkrifa           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,14 +14,14 @@ NAME = wolf3d
 CC = clang
 LIB_NAME = ft
 LIBDIR = libft
-FLAGS = -Wall -Wextra -Werror -O3
+FLAGS = -Wall -Wextra -Werror -O3 
 
 HEADERS = includes/wolf3d.h
 
 SOURCES = srcs/main.c \
 		  srcs/raycast.c \
 		  srcs/tools.c\
-		  srcs/yolo.c
+		  srcs/parsing.c
 		 
 
 OBJECTS = $(SOURCES:.c=.o)
