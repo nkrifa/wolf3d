@@ -6,7 +6,7 @@
 /*   By: nkrifa <nkrifa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/29 01:45:48 by nkrifa            #+#    #+#             */
-/*   Updated: 2017/10/30 02:35:54 by nkrifa           ###   ########.fr       */
+/*   Updated: 2017/10/30 02:55:24 by nkrifa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,11 @@ int		main(int argc, char **argv)
 	if (argc != 2)
 		exit(write(1, "usage = 1 / 2 / 3\n", 18));
 	else if (ft_atoi(argv[1]) == 1)
-		ft_parcing(e, open("../test_maps/1", O_RDONLY));
+		ft_parcing(e, open("./test_maps/1", O_RDONLY));
 	else if (ft_atoi(argv[1]) == 2)
-		ft_parcing(e, open("../test_maps/2", O_RDONLY));
+		ft_parcing(e, open("./test_maps/2", O_RDONLY));
 	else if (ft_atoi(argv[1]) == 3)
-		ft_parcing(e, open("../test_maps/3", O_RDONLY));
+		ft_parcing(e, open("./test_maps/3", O_RDONLY));
 	else
 		exit(write(1, "usage = 1 / 2 / 3\n", 18));
 	ft_raycast(e);
